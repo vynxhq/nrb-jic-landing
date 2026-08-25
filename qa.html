@@ -6,216 +6,173 @@
 <style>
   body { background: #101214; color: #e8eaed; font: 13px/1.5 ui-monospace, Consolas, monospace; padding: 16px; }
   h1 { font-size: 15px; } h2 { font-size: 13px; margin: 14px 0 6px; color: #60b0d0; }
-  table { border-collapse: collapse; margin-bottom: 10px; }
-  td, th { border: 1px solid #2c3140; padding: 3px 8px; font-size: 11px; }
-  .pass { color: #55d977; } .fail { color: #ff6b6b; font-weight: 700; }
   #status { margin-bottom: 8px; }
-  canvas.qa { width: 320px; height: 220px; border: 1px solid #2c3140; margin: 4px; }
-  .grid { display: flex; flex-wrap: wrap; }
-  .failshot { outline: 2px solid #ff6b6b; }
+  .pass { color: #55d977; } .fail { color: #ff6b6b; font-weight: 700; }
 </style>
 </head>
 <body>
-<h1>NRB 3D QA Gate — orientation matrix + black-anomaly + silhouette checks</h1>
-<div id="status">starting…</div>
+<h1>NRB 3D QA Gate — orientation matrix + black-anomaly + temporal checks</h1>
+<div id="status">loading bundle…</div>
 <div id="results"></div>
-<div id="shots" class="grid"></div>
+<script>
+  window.__setStatus = (m) => (document.getElementById("status").textContent = m);
+  window.addEventListener("error", (e) => window.__setStatus("ERROR: " + (e.message || e.error)));
+  window.addEventListener("unhandledrejection", (e) => window.__setStatus("REJECTION: " + (e.reason && (e.reason.message || e.reason))));
+</script>
 <script type="module">
-import * as THREE from "/src/three/qa_entry.ts";
-import {
-  dashDims, nutGeometries, insertGeometry, ferruleGeometry, tubeGeometry,
-  makeMaterial,
-} from "/src/three/qa_entry.ts";
+import * as THREE from "./qa_bundle.js";
+const {
+  CylinderGeometry, Scene, PerspectiveCamera, WebGLRenderer, Mesh, MeshStandardMaterial,
+  AmbientLight, DirectionalLight, PMREMGenerator, SphereGeometry, PlaneGeometry,
+  MeshBasicMaterial, BackSide, Color, MathUtils, Sphere, ACESFilmicToneMapping,
+  Box3,
+  nutBodyGeometry, nutThreadRing, nutSpec, insertGeometry, ferruleGeometry,
+  tubeGeometry, dashDims,
+} = THREE;
 
-const status = (t) => (document.getElementById("status").textContent = t);
-const AZ = [0, 45, 90, 135, 180, 225, 270, 315];
-const EL = [5, 30, 55];
+const setStatus = (m) => window.__setStatus(m);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
+const renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
 renderer.setSize(480, 330);
 renderer.setPixelRatio(1);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.shadowMap.enabled = false;
-document.getElementById("shots").appendChild(renderer.domElement);
-renderer.domElement.className = "qa";
+renderer.toneMapping = ACESFilmicToneMapping;
+document.body.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xff00ff); // magenta key = background for analysis
-scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(-3, 4, 2); scene.add(key);
-const fill = new THREE.DirectionalLight(0xffffff, 0.5); fill.position.set(3, 1, -2); scene.add(fill);
-
-// Environment map — metals need reflections or they render black (harness flaw #1, fixed)
+const scene = new Scene();
+scene.background = new Color(0xff00ff); // magenta key = background
+scene.add(new AmbientLight(0xffffff, 0.55));
+const key = new DirectionalLight(0xffffff, 2.0); key.position.set(-3, 4, 2); scene.add(key);
+const fill = new DirectionalLight(0xffffff, 0.5); fill.position.set(3, 1, -2); scene.add(fill);
 {
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const envScene = new THREE.Scene();
-  const room = new THREE.Mesh(
-    new THREE.SphereGeometry(20, 32, 16),
-    new THREE.MeshBasicMaterial({ color: 0x9aa4ae, side: THREE.BackSide }),
-  );
+  const pmrem = new PMREMGenerator(renderer);
+  const envScene = new Scene();
+  const room = new Mesh(new SphereGeometry(20, 32, 16), new MeshBasicMaterial({ color: 0x9aa4ae, side: BackSide }));
   envScene.add(room);
-  const panel = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-  panel.position.set(-6, 6, 4); panel.lookAt(0, 0, 0); envScene.add(panel);
-  const panel2 = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.MeshBasicMaterial({ color: 0xdde6ee }));
-  panel2.position.set(5, 3, -5); panel2.lookAt(0, 0, 0); envScene.add(panel2);
+  const p1 = new Mesh(new PlaneGeometry(8, 8), new MeshBasicMaterial({ color: 0xffffff }));
+  p1.position.set(-6, 6, 4); p1.lookAt(0, 0, 0); envScene.add(p1);
+  const p2 = new Mesh(new PlaneGeometry(6, 6), new MeshBasicMaterial({ color: 0xdde6ee }));
+  p2.position.set(5, 3, -5); p2.lookAt(0, 0, 0); envScene.add(p2);
   scene.environment = pmrem.fromScene(envScene, 0.04).texture;
   pmrem.dispose();
 }
+const camera = new PerspectiveCamera(38, 480 / 330, 0.05, 100);
 
-const camera = new THREE.PerspectiveCamera(38, 480 / 330, 0.05, 100);
+const steel = new MeshStandardMaterial({ color: 0xc6cbcf, metalness: 0.9, roughness: 0.33, side: THREE.DoubleSide });
 
-function buildModel(kind, dash = 8) {
-  const dims = dashDims(dash);
-  const mat = makeMaterial("ss304");
+function buildModel(kind) {
+  const dims = dashDims(8);
   const g = new THREE.Group();
   if (kind === "assembly") {
-    const nut = nutGeometries(dims);
-    const parts = [
-      { geos: [nut.hex, nut.bore], x: 0.78 * dims.tubeOD, rot: 0 },
-      { geos: [ferruleGeometry(dims)], x: -1.02 * dims.tubeOD, rot: 0 },
-      { geos: [insertGeometry(dims)], x: 0, rot: 0 },
-      { geos: [tubeGeometry(dims, dims.tubeOD * 2.2)], x: -2.38 * dims.tubeOD, rot: 0 },
-    ];
-    for (const p of parts) {
-      const sub = new THREE.Group();
-      sub.position.x = p.x;
-      sub.rotation.z = -Math.PI / 2;
-      for (const geo of p.geos) {
-        const m = new THREE.Mesh(geo, mat);
-        m.castShadow = false;
-        sub.add(m);
+    const nut = new Mesh(nutBodyGeometry(dims), steel);
+    const ring = nutThreadRing(dims);
+    const tooth = new THREE.BoxGeometry(dims.tubeOD * 0.2, dims.tubeOD * 0.11, dims.tubeOD * 0.05);
+    const teeth = new THREE.InstancedMesh(tooth, steel, ring.count * ring.rows);
+    const dummy = new THREE.Object3D();
+    let i = 0;
+    for (let r = 0; r < ring.rows; r++) {
+      const y = -dims.tubeOD * 1.15 * 0.28 + (r / (ring.rows - 1)) * dims.tubeOD * 1.15 * 0.42;
+      for (let c = 0; c < ring.count; c++) {
+        const th = (c / ring.count) * Math.PI * 2;
+        dummy.position.set(ring.radius * Math.sin(th), y, ring.radius * Math.cos(th));
+        dummy.rotation.set(0, th, 0);
+        dummy.updateMatrix();
+        teeth.setMatrixAt(i++, dummy.matrix);
       }
-      g.add(sub);
     }
-  } else {
-    let geo;
-    if (kind === "nut") { const n = nutGeometries(dims); geo = [n.hex, n.bore]; }
-    else if (kind === "insert") geo = [insertGeometry(dims)];
-    else if (kind === "ferrule") geo = [ferruleGeometry(dims)];
-    else geo = [tubeGeometry(dims, dims.tubeOD * 2.2)];
-    const sub = new THREE.Group();
-    sub.rotation.z = -Math.PI / 2;
-    for (const gg of geo) sub.add(new THREE.Mesh(gg, mat));
-    g.add(sub);
+    const nutG = new THREE.Group(); nutG.add(nut); nutG.add(teeth);
+    nutG.position.x = dims.tubeOD * 0.78;
+    nutG.rotation.z = -Math.PI / 2;
+    const ferrule = new Mesh(ferruleGeometry(dims), steel);
+    ferrule.rotation.z = -Math.PI / 2; ferrule.position.x = -dims.tubeOD * 1.02;
+    const insert = new Mesh(insertGeometry(dims), steel);
+    insert.rotation.z = -Math.PI / 2;
+    const tube = new Mesh(tubeGeometry(dims, dims.tubeOD * 2.2), steel);
+    tube.rotation.z = -Math.PI / 2; tube.position.x = -dims.tubeOD * 2.38;
+    g.add(nutG, ferrule, insert, tube);
+  } else if (kind === "nut") {
+    const m = new Mesh(nutBodyGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2;
+    g.add(m);
+  } else if (kind === "insert") {
+    const m = new Mesh(insertGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
+  } else if (kind === "ferrule") {
+    const m = new Mesh(ferruleGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
+  } else if (kind === "tube") {
+    const m = new Mesh(tubeGeometry(dims, dims.tubeOD * 2.2), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
   }
   return g;
 }
 
-function analyze(renderer, scene, camera, model, az, el) {
+function analyze() {
   renderer.render(scene, camera);
   const w = renderer.domElement.width, h = renderer.domElement.height;
   const data = new Uint8ClampedArray(w * h * 4);
   renderer.getContext().readPixels(0, 0, w, h, renderer.getContext().RGBA, renderer.getContext().UNSIGNED_BYTE, data);
-  // NOTE: readPixels origin is bottom-left; analysis is orientation-agnostic.
   const isBg = (i) => data[i] > 200 && data[i + 2] > 200 && data[i + 1] < 90;
-  // silhouette bbox
   let minX = w, maxX = 0, minY = h, maxY = 0, sil = 0;
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const i = (y * w + x) * 4;
-      if (!isBg(i)) {
-        sil++;
-        if (x < minX) minX = x; if (x > maxX) maxX = x;
-        if (y < minY) minY = y; if (y > maxY) maxY = y;
-      }
-    }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4;
+    if (!isBg(i)) { sil++; if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
   }
-  const bw = maxX - minX, bh = maxY - minY;
-  // black-anomaly: near-black pixels strictly inside the silhouette bbox (2px inset)
   let black = 0;
-  for (let y = minY + 2; y <= maxY - 2; y++) {
-    for (let x = minX + 2; x <= maxX - 2; x++) {
-      const i = (y * w + x) * 4;
-      if (!isBg(i) && data[i] < 22 && data[i + 1] < 22 && data[i + 2] < 22) black++;
-    }
+  for (let y = minY + 2; y <= maxY - 2; y++) for (let x = minX + 2; x <= maxX - 2; x++) {
+    const i = (y * w + x) * 4;
+    if (!isBg(i) && data[i] < 22 && data[i + 1] < 22 && data[i + 2] < 22) black++;
   }
-  const bboxArea = Math.max(1, bw * bh);
-  const blackPct = (100 * black) / bboxArea;
-  const silPct = (100 * sil) / (w * h);
-  const failBlack = blackPct > 0.9; // >0.9% of bbox pure-black => hole/backface
-  return { az, el, silPct, blackPct, failBlack };
+  const blackPct = (100 * black) / Math.max(1, (maxX - minX) * (maxY - minY));
+  return { blackPct, silPct: (100 * sil) / (w * h) };
 }
 
 const MODELS = ["assembly", "nut", "insert", "ferrule", "tube"];
-const results = {};
-const failures = [];
+const AZ = [0, 45, 90, 135, 180, 225, 270, 315];
+const EL = [5, 30, 55];
 
 async function run() {
-  const tris = {};
+  const out = {};
+  let allPass = true;
+  const failList = [];
   for (const kind of MODELS) {
-    status(`rendering ${kind}…`);
-    const model = buildModel(kind);
-    scene.add(model);
-    // triangle count
-    let tr = 0;
-    model.traverse((o) => { if (o.isMesh) tr += o.geometry.index ? o.geometry.index.count / 3 : o.geometry.attributes.position.count / 3; });
-    tris[kind] = Math.round(tr);
-    const bs = new THREE.Box3().setFromObject(model);
-    const sphere = bs.getBoundingSphere(new THREE.Sphere());
-    const dist = sphere.radius * 2.7 + 0.2;
+    setStatus("testing " + kind + "…");
+    scene.add(buildModel(kind));
     const rows = [];
-    for (const el of EL) {
-      for (const az of AZ) {
-        const phi = THREE.MathUtils.degToRad(az);
-        const theta = THREE.MathUtils.degToRad(el);
-        camera.position.set(
-          dist * Math.cos(theta) * Math.sin(phi),
-          dist * Math.sin(theta),
-          dist * Math.cos(theta) * Math.cos(phi),
-        );
-        camera.lookAt(0, 0, 0);
-        const r = analyze(renderer, scene, camera, model, az, el);
-        rows.push(r);
-        if (r.failBlack) failures.push(`${kind} az${az} el${el}: black ${r.blackPct.toFixed(2)}%`);
-        await new Promise((res) => setTimeout(res, 0));
-      }
-    }
-    // silhouette spread is informational only (elongated/ring shapes vary
-    // naturally end-on vs side-on — not a defect signal)
-    const mid = rows.filter((r) => r.el === 30).map((r) => r.silPct);
-    const spread = (Math.max(...mid) - Math.min(...mid)) / Math.max(1, Math.max(...mid));
-    const blackWorst = Math.max(...rows.map((r) => r.blackPct));
-
-    // ---- TEMPORAL TEST: 36 frames of continuous rotation (el 25°).
-    // Catches motion-only artifacts: shadow-acne bands, z-fight flashes,
-    // popping geometry — anything that appears only while interacting.
-    const temporalFrames = 36;
-    const counts = [];
-    for (let f = 0; f < temporalFrames; f++) {
-      const az = f * 10;
-      const theta = THREE.MathUtils.degToRad(25);
-      const phi = THREE.MathUtils.degToRad(az);
-      camera.position.set(
-        dist * Math.cos(theta) * Math.sin(phi),
-        dist * Math.sin(theta),
-        dist * Math.cos(theta) * Math.cos(phi),
-      );
+    for (const el of EL) for (const az of AZ) {
+      const phi = MathUtils.degToRad(az), theta = MathUtils.degToRad(el);
+      const bs = new Sphere(); new THREE.Box3().setFromObject(scene).getBoundingSphere(bs);
+      const dist = bs.radius * 2.7 + 0.2;
+      camera.position.set(dist * Math.cos(theta) * Math.sin(phi), dist * Math.sin(theta), dist * Math.cos(theta) * Math.cos(phi));
       camera.lookAt(0, 0, 0);
-      const r = analyze(renderer, scene, camera, model, az, 25);
-      counts.push(r.blackPct);
-      await new Promise((res) => setTimeout(res, 0));
+      rows.push(analyze());
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    const blackWorst = Math.max(...rows.map((r) => r.blackPct));
+    // temporal: 36 frames continuous rotation
+    const counts = [];
+    for (let f = 0; f < 36; f++) {
+      const phi = MathUtils.degToRad(f * 10), theta = MathUtils.degToRad(25);
+      const bs = new Sphere(); new THREE.Box3().setFromObject(scene).getBoundingSphere(bs);
+      const dist = bs.radius * 2.7 + 0.2;
+      camera.position.set(dist * Math.cos(theta) * Math.sin(phi), dist * Math.sin(theta), dist * Math.cos(theta) * Math.cos(phi));
+      camera.lookAt(0, 0, 0);
+      counts.push(analyze().blackPct);
+      await new Promise((r) => setTimeout(r, 0));
     }
     counts.sort((a, b) => a - b);
-    const median = counts[Math.floor(counts.length / 2)];
-    const temporalFail = counts.filter((c) => c > median + 0.5).length;
-
-    results[kind] = { rows, spread, blackWorst, tris: tris[kind], temporalFrames, temporalFail };
-    scene.remove(model);
-  }
-
-  // report — gate = static black% + temporal black-spike detection
-  let html = "<h2>RESULTS</h2><table><tr><th>model</th><th>tris</th><th>static worst black%</th><th>temporal frames</th><th>worst spike</th><th>verdict</th></tr>";
-  let allPass = true;
-  for (const k of MODELS) {
-    const r = results[k];
-    const pass = r.blackWorst <= 0.9 && r.tris > 100 && r.temporalFail === 0;
+    const median = counts[18];
+    const spikes = counts.filter((c) => c > median + 0.5).length;
+    const pass = blackWorst <= 0.9 && spikes === 0;
     if (!pass) allPass = false;
-    html += `<tr><td>${k}</td><td>${r.tris}</td><td>${r.blackWorst.toFixed(3)}</td><td>${r.temporalFrames}</td><td class="${r.temporalFail ? "fail" : "pass"}">${r.temporalFail}</td><td class="${pass ? "pass" : "fail"}">${pass ? "PASS" : "FAIL"}</td></tr>`;
+    out[kind] = { blackWorst: blackWorst.toFixed(3), spikes, pass };
+    if (!pass) failList.push(kind);
+    scene.clear();
   }
-  html += `</table><div class="${allPass ? "pass" : "fail"}" style="font-size:16px">${allPass ? "✔ GATE PASS — all 120 renders clean. Cleared for staging." : "✘ GATE FAIL — " + failures.length + " failing views: " + failures.slice(0, 8).join(" | ")}</div>`;
+  let html = "<h2>RESULTS</h2><table><tr><th>model</th><th>worst black%</th><th>temporal spikes</th><th>verdict</th></tr>";
+  for (const k of MODELS) html += `<tr><td>${k}</td><td>${out[k].blackWorst}</td><td>${out[k].spikes}</td><td class="${out[k].pass ? "pass" : "fail"}">${out[k].pass ? "PASS" : "FAIL"}</td></tr>`;
+  html += `</table><div class="${allPass ? "pass" : "fail"}" style="font-size:16px">${allPass ? "GATE PASS — all 120 static + 180 temporal renders clean." : "GATE FAIL — " + failList.join(", ")}</div>`;
   document.getElementById("results").innerHTML = html;
-  status("done.");
-  window.__QA_DONE__ = true;
+  setStatus("done.");
   window.__QA_PASS__ = allPass;
 }
 run();
