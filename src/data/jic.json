@@ -1,0 +1,709 @@
+{
+ "family": "FEMALE JIC",
+ "title": "Female JIC Connection System",
+ "description": "37-degree flare metal tube connection: JIC nut, insert, ferrule (collar) and steel tube end. Used for low/high pressure fuel delivery by securing hose ends and metal tubes.",
+ "industries": [
+  "Aerospace",
+  "Automotive",
+  "Marine",
+  "Manufacturing",
+  "Oil & Gas"
+ ],
+ "media": "Hydraulic oil, water, standard petroleum products & some gases",
+ "families": {
+  "JIC NUT": {
+   "meta": {
+    "Product Family": "NUT",
+    "Current NRB Product Name": "FEMALE JIC",
+    "Current NRB Product Code (if any)": "NUT",
+    "Current Product Description": "FLARE NUTS",
+    "Applications": "USED FOR LOW/ HIGH PRESSURE FUEL DELIVERY BY SECURING HOSE END & METAL TUBE",
+    "Industries": "AEROSPACE,AUTOMOTIVE, MARINE, MANUFACTURING AND OIL& GAS",
+    "Compatible Media": "HYDRAULIC OIL, WATER, STANDARD PETROLEUM PRODUCTS & SOME GASES.",
+    "Product-Level Material Options": "STAINLESS STEEL 303/304/316, CARBON STEEL, BRASS"
+   },
+   "configs": [
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "Up to 6K",
+     "thread": "7/16\"-20 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 2"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-05",
+     "size": "5/16\"",
+     "sizeIn": 0.3125,
+     "pressure": "Up to 6K",
+     "thread": "1/2\"-20 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 3"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "Up to 6K",
+     "thread": "9/16\"-18 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 4"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "Up to 6K",
+     "thread": "3/4\"-16 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 5"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-10",
+     "size": "5/8\"",
+     "sizeIn": 0.625,
+     "pressure": "Up to 6K",
+     "thread": "7/8\"-14 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 6"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "Up to 6K",
+     "thread": "1 1/16\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 8"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "Up to 6K",
+     "thread": "1 5/16\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 9"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-20",
+     "size": "5/4\"",
+     "sizeIn": 1.25,
+     "pressure": "Up to 6K",
+     "thread": "1 5/8\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-02",
+     "size": "1/8\"",
+     "sizeIn": 0.125,
+     "pressure": "UP TO 20K",
+     "thread": "1/8\"-28 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2020 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "UP TO 20K",
+     "thread": "1/4\"-19 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2021 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "UP TO 20K",
+     "thread": "3/8\"-19 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2022 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "UP TO 20K",
+     "thread": "1/2\"-14 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2023 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "UP TO 20K",
+     "thread": "3/4\"-14 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2024 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "UP TO 20K",
+     "thread": "1\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2025 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-20",
+     "size": "1 1/4\"",
+     "sizeIn": 1.25,
+     "pressure": "UP TO 20K",
+     "thread": "1 1/4\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2026 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-24",
+     "size": "1 1/2\"",
+     "sizeIn": 1.5,
+     "pressure": "UP TO 20K",
+     "thread": "1 1/2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2027 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-32",
+     "size": "2\"",
+     "sizeIn": 2.0,
+     "pressure": "UP TO 20K",
+     "thread": "2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2028 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "NUT",
+     "partNumber": "DASH-36",
+     "size": "2 1/2\"",
+     "sizeIn": 2.5,
+     "pressure": "UP TO 20K",
+     "thread": "2 1/2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2029 Catalogue — Table 5, Row 10"
+    }
+   ]
+  },
+  "JIC INSERT": {
+   "meta": {
+    "Product Family": "NUT",
+    "Current NRB Product Name": "FEMALE JIC",
+    "Current NRB Product Code (if any)": "INSERT",
+    "Current Product Description": "37 DEGREE FLARE METAL TUBE FITTING",
+    "Applications": "USED FOR LOW/ HIGH PRESSURE FUEL DELIVERY BY SECURING HOSE END & METAL TUBE",
+    "Industries": "AEROSPACE,AUTOMOTIVE, MARINE, MANUFACTURING AND OIL& GAS",
+    "Compatible Media": "HYDRAULIC OIL, WATER, STANDARD PETROLEUM PRODUCTS & SOME GASES.",
+    "Product-Level Material Options": "STAINLESS STEEL 303/304/316, CARBON STEEL, BRASS"
+   },
+   "configs": [
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "Up to 6K",
+     "thread": "7/16\"-20 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 2"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-05",
+     "size": "5/16\"",
+     "sizeIn": 0.3125,
+     "pressure": "Up to 6K",
+     "thread": "1/2\"-20 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 3"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "Up to 6K",
+     "thread": "9/16\"-18 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 4"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "Up to 6K",
+     "thread": "3/4\"-16 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 5"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-10",
+     "size": "5/8\"",
+     "sizeIn": 0.625,
+     "pressure": "Up to 6K",
+     "thread": "7/8\"-14 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 6"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "Up to 6K",
+     "thread": "1 1/16\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 8"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "Up to 6K",
+     "thread": "1 5/16\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 9"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-20",
+     "size": "5/4\"",
+     "sizeIn": 1.25,
+     "pressure": "Up to 6K",
+     "thread": "1 5/8\"-12 UNF",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-02",
+     "size": "1/8\"",
+     "sizeIn": 0.125,
+     "pressure": "UP TO 20K",
+     "thread": "1/8\"-28 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2020 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "UP TO 20K",
+     "thread": "1/4\"-19 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2021 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "UP TO 20K",
+     "thread": "3/8\"-19 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2022 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "UP TO 20K",
+     "thread": "1/2\"-14 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2023 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "UP TO 20K",
+     "thread": "3/4\"-14 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2024 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "UP TO 20K",
+     "thread": "1\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2025 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-20",
+     "size": "1 1/4\"",
+     "sizeIn": 1.25,
+     "pressure": "UP TO 20K",
+     "thread": "1 1/4\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2026 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-24",
+     "size": "1 1/2\"",
+     "sizeIn": 1.5,
+     "pressure": "UP TO 20K",
+     "thread": "1 1/2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2027 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-32",
+     "size": "2\"",
+     "sizeIn": 2.0,
+     "pressure": "UP TO 20K",
+     "thread": "2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2028 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "INSERT",
+     "partNumber": "DASH-36",
+     "size": "2 1/2\"",
+     "sizeIn": 2.5,
+     "pressure": "UP TO 20K",
+     "thread": "2 1/2\"-11 BSP",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2029 Catalogue — Table 5, Row 10"
+    }
+   ]
+  },
+  "FERRULE": {
+   "meta": {
+    "Product Family": "FERRULE",
+    "Current NRB Product Name": "FEMALE JIC",
+    "Current NRB Product Code (if any)": "COLLAR",
+    "Current Product Description": "COLLAR",
+    "Applications": "USED FOR LOW/ HIGH PRESSURE FUEL DELIVERY BY SECURING HOSE END & METAL TUBE",
+    "Industries": "AEROSPACE,AUTOMOTIVE, MARINE, MANUFACTURING AND OIL& GAS",
+    "Compatible Media": "HYDRAULIC OIL, WATER, STANDARD PETROLEUM PRODUCTS & SOME GASES.",
+    "Product-Level Material Options": "STAINLESS STEEL 303/304/316, CARBON STEEL, BRASS"
+   },
+   "configs": [
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 2"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-05",
+     "size": "5/16\"",
+     "sizeIn": 0.3125,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 3"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 4"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 5"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-10",
+     "size": "5/8\"",
+     "sizeIn": 0.625,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 6"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 8"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 9"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-20",
+     "size": "5/4\"",
+     "sizeIn": 1.25,
+     "pressure": "Up to 6K",
+     "thread": "SMOOTH BORE",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-05",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2021 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2022 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2023 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-10",
+     "size": "5/8\"",
+     "sizeIn": 0.625,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2024 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "",
+     "source": ""
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2025 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-20",
+     "size": "1 1/4\"",
+     "sizeIn": 1.25,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2026 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-24",
+     "size": "1 1/2\"",
+     "sizeIn": 1.5,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2027 Catalogue — Table 5, Row 10"
+    },
+    {
+     "variant": "FERRULE",
+     "partNumber": "DASH-32",
+     "size": "2\"",
+     "sizeIn": 2.0,
+     "pressure": "UP TO 20K",
+     "thread": "GROOVED",
+     "materials": "SS304/316, CARBON STEEL, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2028 Catalogue — Table 5, Row 10"
+    }
+   ]
+  },
+  "STEEL TUBE END": {
+   "meta": {
+    "Product Family": "TUBE END",
+    "Current NRB Product Name": "STEEL TUBE END",
+    "Current NRB Product Code (if any)": "STE",
+    "Current Product Description": "STEEL TUBE END",
+    "Applications": "USED FOR LOW/ HIGH PRESSURE FUEL DELIVERY BY SECURING HOSE END & METAL TUBE",
+    "Industries": "AEROSPACE,AUTOMOTIVE, MARINE, MANUFACTURING AND OIL& GAS",
+    "Compatible Media": "HYDRAULIC OIL, WATER, STANDARD PETROLEUM PRODUCTS & SOME GASES.",
+    "Product-Level Material Options": "STAINLESS STEEL 316L, BRASS"
+   },
+   "configs": [
+    {
+     "variant": "STEEL TUBE END",
+     "partNumber": "DASH-04",
+     "size": "1/4\"",
+     "sizeIn": 0.25,
+     "pressure": "Up to 6K",
+     "thread": "1/4\"",
+     "materials": "SS316, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 2"
+    },
+    {
+     "variant": "STEEL TUBE END",
+     "partNumber": "DASH-06",
+     "size": "3/8\"",
+     "sizeIn": 0.375,
+     "pressure": "Up to 6K",
+     "thread": "3/8\"",
+     "materials": "SS316, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 4"
+    },
+    {
+     "variant": "STEEL TUBE END",
+     "partNumber": "DASH-08",
+     "size": "1/2\"",
+     "sizeIn": 0.5,
+     "pressure": "Up to 6K",
+     "thread": "1/2\"",
+     "materials": "SS316, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 5"
+    },
+    {
+     "variant": "STEEL TUBE END",
+     "partNumber": "DASH-12",
+     "size": "3/4\"",
+     "sizeIn": 0.75,
+     "pressure": "Up to 6K",
+     "thread": "3/4\"",
+     "materials": "SS316, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 6"
+    },
+    {
+     "variant": "STEEL TUBE END",
+     "partNumber": "DASH-16",
+     "size": "1\"",
+     "sizeIn": 1.0,
+     "pressure": "Up to 6K",
+     "thread": "1\"",
+     "materials": "SS316, BRASS",
+     "reviewStatus": "Confirmed as Shown",
+     "source": "2019 Catalogue — Table 5, Row 9"
+    }
+   ]
+  }
+ }
+}
