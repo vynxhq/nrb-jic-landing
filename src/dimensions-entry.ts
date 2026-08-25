@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { nutBodyGeometry, nutThreadRing, insertGeometry, ferruleGeometry, tubeGeometry, dashDims } from "./three/jicGeometry";
 import { dimensionsFor } from "./three/modelDimensions";
 
@@ -6,10 +7,10 @@ const steel = new THREE.MeshStandardMaterial({ color: 0xc6cbcf, metalness: 0.9, 
 const steelFlat = new THREE.MeshStandardMaterial({ color: 0xc6cbcf, metalness: 0.9, roughness: 0.33, side: THREE.DoubleSide, flatShading: true });
 
 const KINDS: { key: string; title: string; blurb: string }[] = [
-  { key: "nut", title: "JIC Nut — DASH-08", blurb: "Across-flats, height, thread series (SAE J514 — pending confirmation)." },
-  { key: "insert", title: "JIC Insert — DASH-08", blurb: "Overall length, flare diameter, external thread series." },
-  { key: "ferrule", title: "Ferrule (Collar) — DASH-08", blurb: "Outside diameter and collar length." },
-  { key: "tube", title: "Steel Tube End — DASH-08", blurb: "Outside diameter (½\" tube) and length." },
+  { key: "nut", title: "JIC Nut, DASH-08", blurb: "Across-flats, height, thread series (SAE J514, pending confirmation)." },
+  { key: "insert", title: "JIC Insert, DASH-08", blurb: "Overall length, flare diameter, external thread series." },
+  { key: "ferrule", title: "Ferrule (Collar), DASH-08", blurb: "Outside diameter and collar length." },
+  { key: "tube", title: "Steel Tube End, DASH-08", blurb: "Outside diameter (½\" tube) and length." },
 ];
 
 let dimsVisible = true;
@@ -89,10 +90,26 @@ function buildCard(kind: string, title: string, blurb: string) {
   dimsGroups.push(dimsGroup);
   scene.add(model);
 
-  let auto = true;
-  canvas.addEventListener("pointerdown", () => (auto = false));
+  // Full orbit interaction: drag rotates, wheel zooms. Gentle auto-spin runs
+  // until the first interaction and resumes after 4 seconds of idle.
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+  controls.minDistance = 0.8;
+  controls.maxDistance = 8;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.7;
+  let idleTimer = 0;
+  controls.addEventListener("start", () => {
+    controls.autoRotate = false;
+    window.clearTimeout(idleTimer);
+  });
+  controls.addEventListener("end", () => {
+    idleTimer = window.setTimeout(() => (controls.autoRotate = true), 4000);
+  });
+
   function tick() {
-    if (auto) model.rotation.y += 0.004;
+    controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
