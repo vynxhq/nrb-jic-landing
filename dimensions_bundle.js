@@ -27003,34 +27003,33 @@ var dim = (a, b, offset, text) => ({
 });
 function dimensionsFor(kind) {
   const d = dashDims(8);
+  const d2 = d.tubeOD;
   const g = new Group();
   g.name = "engineeringDimensions";
   if (kind === "nut") {
-    const { h, boreR, seatR } = nutSpec(d);
+    const h = d2 * 1.15;
     const af = d.hexAF;
     g.add(makeDimension(
       dim(
-        [0, h / 2, -af / 2],
-        [0, h / 2, af / 2],
+        [-af / 2, h / 2, 0],
+        [af / 2, h / 2, 0],
         [0, 0.16, 0],
         `AF ${IN(af)} \xB7 ${MM(af)}`
       )
     ));
     g.add(makeDimension(
       dim(
-        [-h / 2, 0, 0],
-        [h / 2, 0, 0],
-        [0, -(af / 2 + 0.16), 0],
+        [0, -h / 2, 0],
+        [0, h / 2, 0],
+        [af / 2 + 0.18, 0, 0],
         `H ${IN(h)} \xB7 ${MM(h)}`
       )
     ));
     g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 counterseat`, new Vector3(0, h / 2 + 0.3, 0)));
-    void boreR;
-    void seatR;
   }
   if (kind === "insert") {
-    const L = d.tubeOD * 2.6;
-    const flareD = d.tubeOD * 0.86 * 2;
+    const L = d2 * 2.6;
+    const flareD = d2 * 0.86 * 2;
     g.add(makeDimension(
       dim(
         [0, -L / 2, 0],
@@ -27041,51 +27040,51 @@ function dimensionsFor(kind) {
     ));
     g.add(makeDimension(
       dim(
-        [0, L / 2 - d.tubeOD * 0.1, -flareD / 2],
-        [0, L / 2 - d.tubeOD * 0.1, flareD / 2],
+        [0, -L / 2 + d2 * 0.05, -flareD / 2],
+        [0, -L / 2 + d2 * 0.05, flareD / 2],
         [0, 0.18, 0],
         `\xD8 ${IN(flareD)} \xB7 ${MM(flareD)}`
       )
     ));
-    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 flare`, new Vector3(0, -L / 2 - 0.28, 0)));
+    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 flare`, new Vector3(0, L / 2 + 0.28, 0)));
   }
   if (kind === "ferrule") {
-    const h = d.tubeOD * 0.55;
-    const od = d.tubeOD * 0.88 * 2;
+    const h = d2 * 0.55;
+    const od = d2 * 0.88 * 2;
     g.add(makeDimension(
       dim(
+        [0, h / 2, -od / 2],
         [0, h / 2, od / 2],
-        [0, -h / 2, od / 2],
         [0.2, 0, 0],
         `OD ${IN(od)} \xB7 ${MM(od)}`
       )
     ));
     g.add(makeDimension(
       dim(
-        [-h / 2, 0, 0],
-        [h / 2, 0, 0],
-        [0, -(od / 2 + 0.14), 0],
+        [0, -h / 2, 0],
+        [0, h / 2, 0],
+        [od / 2 + 0.14, 0, 0],
         `L ${IN(h)} \xB7 ${MM(h)}`
       )
     ));
     g.add(makeNote(`Crimp collar \xB7 smooth bore`, new Vector3(0, h / 2 + 0.26, 0)));
   }
   if (kind === "tube") {
-    const L = d.tubeOD * 2.2;
-    const od = d.tubeOD;
+    const L = d2 * 2.2;
+    const od = d2;
     g.add(makeDimension(
       dim(
-        [0, L / 2, od / 2],
-        [0, -L / 2, od / 2],
-        [0.22, 0, 0],
+        [0, 0, -od / 2],
+        [0, 0, od / 2],
+        [od / 2 + 0.22, 0, 0],
         `\xD8 ${IN(od)} \xB7 ${MM(od)}`
       )
     ));
     g.add(makeDimension(
       dim(
-        [-L / 2, 0, 0],
-        [L / 2, 0, 0],
-        [0, -(od / 2 + 0.16), 0],
+        [0, -L / 2, 0],
+        [0, L / 2, 0],
+        [0, -(L / 2 + 0.15), 0],
         `L ${IN(L)} \xB7 ${MM(L)}`
       )
     ));
