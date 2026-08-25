@@ -14,32 +14,43 @@ export interface DimSpec {
   label: string;
 }
 
-const DIM_COLOR = 0x9fd8ff;
+const DIM_COLOR = 0x1070a0;
 
 export function makeLabelSprite(text: string, worldHeight = 0.14): THREE.Sprite {
+  // Dynamic sizing: the chip always fits its text exactly (no clipping).
+  const measure = document.createElement("canvas").getContext("2d")!;
+  const font = "600 46px ui-monospace, Consolas, monospace";
+  measure.font = font;
+  const textW = measure.measureText(text).width;
+  const padX = 44;
+  const chipW = Math.ceil(textW + padX * 2);
+  const chipH = 104;
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 128;
+  canvas.width = chipW + 12;
+  canvas.height = chipH + 12;
   const ctx = canvas.getContext("2d")!;
-  ctx.fillStyle = "rgba(14,16,18,0.92)";
+  // light chip + dark text: high contrast on the dark scene, easy to read
+  ctx.fillStyle = "rgba(244,247,249,0.96)";
   ctx.beginPath();
-  const r = 18;
-  ctx.roundRect(6, 6, 500, 116, r);
+  ctx.roundRect(6, 6, chipW, chipH, 16);
   ctx.fill();
-  ctx.strokeStyle = "#1070a0";
+  ctx.strokeStyle = "rgba(16,112,160,0.85)";
   ctx.lineWidth = 3;
   ctx.stroke();
-  ctx.font = "600 46px ui-monospace, Consolas, monospace";
-  ctx.fillStyle = "#e8eaed";
+  // blue accent bar on the left edge
+  ctx.fillStyle = "#1070a0";
+  ctx.fillRect(6, 6, 10, chipH);
+  ctx.font = font;
+  ctx.fillStyle = "#0e2233";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(text, 256, 66);
+  ctx.fillText(text, 6 + chipW / 2 + 5, 6 + chipH / 2);
   const tex = new THREE.CanvasTexture(canvas);
   tex.anisotropy = 4;
   const spr = new THREE.Sprite(
     new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }),
   );
-  spr.scale.set(worldHeight * 4, worldHeight, 1);
+  spr.scale.set(worldHeight * (canvas.width / canvas.height), worldHeight, 1);
   spr.renderOrder = 10;
   return spr;
 }
