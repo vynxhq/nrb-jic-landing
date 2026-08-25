@@ -30,7 +30,7 @@ export function Hero() {
         onPointerLeave={() => (target.current = 0)}
       >
         <StudioCanvas cameraPosition={[3.4, 1.15, 3.8]} fov={40} enableZoom={false}>
-          <JicAssembly dash={8} material="ss304" explode={shown} spin />
+          <JicAssembly dash={8} material="ss304" explode={shown} spin showDims />
         </StudioCanvas>
       </div>
 
