@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>NRB 3D QA Gate — 120-render matrix</title>
+<style>
+  body { background: #101214; color: #e8eaed; font: 13px/1.5 ui-monospace, Consolas, monospace; padding: 16px; }
+  h1 { font-size: 15px; } h2 { font-size: 13px; margin: 14px 0 6px; color: #60b0d0; }
+  #status { margin-bottom: 8px; }
+  .pass { color: #55d977; } .fail { color: #ff6b6b; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>NRB 3D QA Gate — orientation matrix + black-anomaly + temporal checks</h1>
+<div id="status">loading bundle…</div>
+<div id="results"></div>
+<script>
+  window.__setStatus = (m) => (document.getElementById("status").textContent = m);
+  window.addEventListener("error", (e) => window.__setStatus("ERROR: " + (e.message || e.error)));
+  window.addEventListener("unhandledrejection", (e) => window.__setStatus("REJECTION: " + (e.reason && (e.reason.message || e.reason))));
+</script>
+<script type="module">
+import * as THREE from "./qa_bundle.js";
+const {
+  CylinderGeometry, Scene, PerspectiveCamera, WebGLRenderer, Mesh, MeshStandardMaterial,
+  AmbientLight, DirectionalLight, PMREMGenerator, SphereGeometry, PlaneGeometry,
+  MeshBasicMaterial, BackSide, Color, MathUtils, Sphere, ACESFilmicToneMapping,
+  Box3,
+  nutBodyGeometry, nutThreadRing, nutSpec, insertGeometry, ferruleGeometry,
+  tubeGeometry, dashDims,
+} = THREE;
+
+const setStatus = (m) => window.__setStatus(m);
+
+const renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
+renderer.setSize(480, 330);
+renderer.setPixelRatio(1);
+renderer.toneMapping = ACESFilmicToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const scene = new Scene();
+scene.background = new Color(0xff00ff); // magenta key = background
+scene.add(new AmbientLight(0xffffff, 0.55));
+const key = new DirectionalLight(0xffffff, 2.0); key.position.set(-3, 4, 2); scene.add(key);
+const fill = new DirectionalLight(0xffffff, 0.5); fill.position.set(3, 1, -2); scene.add(fill);
+{
+  const pmrem = new PMREMGenerator(renderer);
+  const envScene = new Scene();
+  const room = new Mesh(new SphereGeometry(20, 32, 16), new MeshBasicMaterial({ color: 0x9aa4ae, side: BackSide }));
+  envScene.add(room);
+  const p1 = new Mesh(new PlaneGeometry(8, 8), new MeshBasicMaterial({ color: 0xffffff }));
+  p1.position.set(-6, 6, 4); p1.lookAt(0, 0, 0); envScene.add(p1);
+  const p2 = new Mesh(new PlaneGeometry(6, 6), new MeshBasicMaterial({ color: 0xdde6ee }));
+  p2.position.set(5, 3, -5); p2.lookAt(0, 0, 0); envScene.add(p2);
+  scene.environment = pmrem.fromScene(envScene, 0.04).texture;
+  pmrem.dispose();
+}
+const camera = new PerspectiveCamera(38, 480 / 330, 0.05, 100);
+
+const steel = new MeshStandardMaterial({ color: 0xc6cbcf, metalness: 0.9, roughness: 0.33, side: THREE.DoubleSide });
+
+function buildModel(kind) {
+  const dims = dashDims(8);
+  const g = new THREE.Group();
+  if (kind === "assembly") {
+    const nut = new Mesh(nutBodyGeometry(dims), steel);
+    const ring = nutThreadRing(dims);
+    const tooth = new THREE.BoxGeometry(dims.tubeOD * 0.2, dims.tubeOD * 0.11, dims.tubeOD * 0.05);
+    const teeth = new THREE.InstancedMesh(tooth, steel, ring.count * ring.rows);
+    const dummy = new THREE.Object3D();
+    let i = 0;
+    for (let r = 0; r < ring.rows; r++) {
+      const y = -dims.tubeOD * 1.15 * 0.28 + (r / (ring.rows - 1)) * dims.tubeOD * 1.15 * 0.42;
+      for (let c = 0; c < ring.count; c++) {
+        const th = (c / ring.count) * Math.PI * 2;
+        dummy.position.set(ring.radius * Math.sin(th), y, ring.radius * Math.cos(th));
+        dummy.rotation.set(0, th, 0);
+        dummy.updateMatrix();
+        teeth.setMatrixAt(i++, dummy.matrix);
+      }
+    }
+    const nutG = new THREE.Group(); nutG.add(nut); nutG.add(teeth);
+    nutG.position.x = dims.tubeOD * 0.78;
+    nutG.rotation.z = -Math.PI / 2;
+    const ferrule = new Mesh(ferruleGeometry(dims), steel);
+    ferrule.rotation.z = -Math.PI / 2; ferrule.position.x = -dims.tubeOD * 1.02;
+    const insert = new Mesh(insertGeometry(dims), steel);
+    insert.rotation.z = -Math.PI / 2;
+    const tube = new Mesh(tubeGeometry(dims, dims.tubeOD * 2.2), steel);
+    tube.rotation.z = -Math.PI / 2; tube.position.x = -dims.tubeOD * 2.38;
+    g.add(nutG, ferrule, insert, tube);
+  } else if (kind === "nut") {
+    const m = new Mesh(nutBodyGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2;
+    g.add(m);
+  } else if (kind === "insert") {
+    const m = new Mesh(insertGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
+  } else if (kind === "ferrule") {
+    const m = new Mesh(ferruleGeometry(dims), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
+  } else if (kind === "tube") {
+    const m = new Mesh(tubeGeometry(dims, dims.tubeOD * 2.2), steel);
+    m.rotation.z = -Math.PI / 2; g.add(m);
+  }
+  return g;
+}
+
+function analyze() {
+  renderer.render(scene, camera);
+  const w = renderer.domElement.width, h = renderer.domElement.height;
+  const data = new Uint8ClampedArray(w * h * 4);
+  renderer.getContext().readPixels(0, 0, w, h, renderer.getContext().RGBA, renderer.getContext().UNSIGNED_BYTE, data);
+  const isBg = (i) => data[i] > 200 && data[i + 2] > 200 && data[i + 1] < 90;
+  let minX = w, maxX = 0, minY = h, maxY = 0, sil = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4;
+    if (!isBg(i)) { sil++; if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
+  }
+  let black = 0;
+  for (let y = minY + 2; y <= maxY - 2; y++) for (let x = minX + 2; x <= maxX - 2; x++) {
+    const i = (y * w + x) * 4;
+    if (!isBg(i) && data[i] < 22 && data[i + 1] < 22 && data[i + 2] < 22) black++;
+  }
+  const blackPct = (100 * black) / Math.max(1, (maxX - minX) * (maxY - minY));
+  return { blackPct, silPct: (100 * sil) / (w * h) };
+}
+
+const MODELS = ["assembly", "nut", "insert", "ferrule", "tube"];
+const AZ = [0, 45, 90, 135, 180, 225, 270, 315];
+const EL = [5, 30, 55];
+
+async function run() {
+  const out = {};
+  let allPass = true;
+  const failList = [];
+  for (const kind of MODELS) {
+    setStatus("testing " + kind + "…");
+    scene.add(buildModel(kind));
+    const rows = [];
+    for (const el of EL) for (const az of AZ) {
+      const phi = MathUtils.degToRad(az), theta = MathUtils.degToRad(el);
+      const bs = new Sphere(); new THREE.Box3().setFromObject(scene).getBoundingSphere(bs);
+      const dist = bs.radius * 2.7 + 0.2;
+      camera.position.set(dist * Math.cos(theta) * Math.sin(phi), dist * Math.sin(theta), dist * Math.cos(theta) * Math.cos(phi));
+      camera.lookAt(0, 0, 0);
+      rows.push(analyze());
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    const blackWorst = Math.max(...rows.map((r) => r.blackPct));
+    // temporal: 36 frames continuous rotation
+    const counts = [];
+    for (let f = 0; f < 36; f++) {
+      const phi = MathUtils.degToRad(f * 10), theta = MathUtils.degToRad(25);
+      const bs = new Sphere(); new THREE.Box3().setFromObject(scene).getBoundingSphere(bs);
+      const dist = bs.radius * 2.7 + 0.2;
+      camera.position.set(dist * Math.cos(theta) * Math.sin(phi), dist * Math.sin(theta), dist * Math.cos(theta) * Math.cos(phi));
+      camera.lookAt(0, 0, 0);
+      counts.push(analyze().blackPct);
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    counts.sort((a, b) => a - b);
+    const median = counts[18];
+    const spikes = counts.filter((c) => c > median + 0.5).length;
+    const pass = blackWorst <= 0.9 && spikes === 0;
+    if (!pass) allPass = false;
+    out[kind] = { blackWorst: blackWorst.toFixed(3), spikes, pass };
+    if (!pass) failList.push(kind);
+    scene.clear();
+  }
+  let html = "<h2>RESULTS</h2><table><tr><th>model</th><th>worst black%</th><th>temporal spikes</th><th>verdict</th></tr>";
+  for (const k of MODELS) html += `<tr><td>${k}</td><td>${out[k].blackWorst}</td><td>${out[k].spikes}</td><td class="${out[k].pass ? "pass" : "fail"}">${out[k].pass ? "PASS" : "FAIL"}</td></tr>`;
+  html += `</table><div class="${allPass ? "pass" : "fail"}" style="font-size:16px">${allPass ? "GATE PASS — all 120 static + 180 temporal renders clean." : "GATE FAIL — " + failList.join(", ")}</div>`;
+  document.getElementById("results").innerHTML = html;
+  setStatus("done.");
+  window.__QA_PASS__ = allPass;
+}
+run();
+</script>
+</body>
+</html>
