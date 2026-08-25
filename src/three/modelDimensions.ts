@@ -29,6 +29,17 @@ export function dimensionsFor(kind: string): THREE.Group {
   const g = new THREE.Group();
   g.name = "engineeringDimensions";
 
+  if (kind === "assembly") {
+    // overall stack length: tube end to nut face
+    const xL = -d2 * 3.48;
+    const xR = d2 * 1.355;
+    g.add(makeDimension(
+      dim([xL, 0, 0], [xR, 0, 0], [0, -(d2 * 0.78), 0],
+        `L ${IN(xR - xL)} · ${MM(xR - xL)}`),
+    ));
+    g.add(makeNote(`Female JIC connection · assembled`, new THREE.Vector3(xR - d2 * 0.4, d2 * 0.62, 0)));
+  }
+
   if (kind === "nut") {
     const h = d2 * 1.15;
     const af = d.hexAF;
