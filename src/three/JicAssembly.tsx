@@ -11,6 +11,7 @@ import {
   tubeGeometry,
 } from "./jicGeometry";
 import { MaterialKey, makeMaterial } from "./materials";
+import { dimensionsFor } from "./modelDimensions";
 
 export interface JicSelection {
   dash: number;
@@ -34,11 +35,13 @@ export function JicAssembly({
   spin = true,
   part = "assembly",
   mouthDir,
+  showDims = false,
 }: JicSelection & {
   explode: number;
   spin?: boolean;
   part?: JicPart;
   mouthDir?: [number, number, number];
+  showDims?: boolean;
 }) {
   const dims = useMemo(() => dashDims(dash), [dash]);
   const nutH = dims.tubeOD * 1.15; // nut height (matches jicGeometry)
@@ -156,6 +159,7 @@ export function JicAssembly({
 
   // Solo-part rendering (catalog cards / configurator single-component view)
   if (part !== "assembly") {
+    const dimsG = showDims ? dimensionsFor(part) : null;
     const solo =
       part === "nut" ? (
         <group quaternion={nutQuat}>
@@ -178,12 +182,16 @@ export function JicAssembly({
     return (
       <group ref={group} rotation={outerRot}>
         {solo}
+        {dimsG ? <primitive object={dimsG} /> : null}
       </group>
     );
   }
 
+  const assemblyDimsGroup = showDims ? dimensionsFor("assembly") : null;
+
   return (
     <group ref={group} rotation={[0, 0.42, 0]}>
+      {assemblyDimsGroup ? <primitive object={assemblyDimsGroup} /> : null}
       {/* JIC nut — flat-shaded steel on BOTH solids; never dark filler */}
       <group ref={nutRef} position={[closed.nut, 0, 0]}>
         <group rotation={rot}>
