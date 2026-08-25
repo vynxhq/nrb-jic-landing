@@ -27001,19 +27001,33 @@ var dim = (a, b, offset, text) => ({
   offset: new Vector3(...offset),
   label: text
 });
-function dimensionsFor(kind) {
+function dimensionsFor(kind, end = "seat") {
   const d = dashDims(8);
   const d2 = d.tubeOD;
   const g = new Group();
   g.name = "engineeringDimensions";
+  const sgn = end === "mouth" ? -1 : 1;
+  if (kind === "assembly") {
+    const xL = -d2 * 3.48;
+    const xR = d2 * 1.355;
+    g.add(makeDimension(
+      dim(
+        [xL, 0, 0],
+        [xR, 0, 0],
+        [0, -(d2 * 0.78), 0],
+        `L ${IN(xR - xL)} \xB7 ${MM(xR - xL)}`
+      )
+    ));
+    g.add(makeNote(`Female JIC connection \xB7 assembled`, new Vector3(xR - d2 * 0.4, d2 * 0.62, 0)));
+  }
   if (kind === "nut") {
     const h = d2 * 1.15;
     const af = d.hexAF;
     g.add(makeDimension(
       dim(
-        [-af / 2, h / 2, 0],
-        [af / 2, h / 2, 0],
-        [0, 0.16, 0],
+        [-af / 2, sgn * h / 2, 0],
+        [af / 2, sgn * h / 2, 0],
+        [0, sgn * 0.16, 0],
         `AF ${IN(af)} \xB7 ${MM(af)}`
       )
     ));
@@ -27025,7 +27039,7 @@ function dimensionsFor(kind) {
         `H ${IN(h)} \xB7 ${MM(h)}`
       )
     ));
-    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 counterseat`, new Vector3(0, h / 2 + 0.3, 0)));
+    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 counterseat`, new Vector3(0, sgn * (h / 2 + 0.3), 0)));
   }
   if (kind === "insert") {
     const L = d2 * 2.6;
