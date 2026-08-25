@@ -8,7 +8,7 @@ export function Precision() {
           <div className="kicker">Engineering &amp; Manufacturing</div>
           <h2 className="title">Top-of-the-line equipment, verified processes.</h2>
           <p className="lead">
-            NRB invests in the same machine brands the global majors use — and inspects every
+            NRB invests in the same machine brands the global majors use, and inspects every
             single piece, not samples.
           </p>
         </Reveal>
@@ -51,17 +51,17 @@ export function Precision() {
             {[
               {
                 src: "./machines/machine-mazak-cnc.jpg",
-                label: "Yamazaki Mazak — CNC turning centres",
+                label: "Yamazaki Mazak, CNC turning centres",
                 note: "All fittings machined 100% from bar stock",
               },
               {
                 src: "./machines/machine-amada-bandsaw.jpg",
-                label: "AMADA — automatic band saws",
+                label: "AMADA, automatic band saws",
                 note: "Square, burr-free, length-consistent cut-off",
               },
               {
                 src: "./machines/machine-maximator-pump.jpg",
-                label: "Maximator — hydrostatic test pumps",
+                label: "Maximator, hydrostatic test pumps",
                 note: "Proof & burst testing up to 50,000 psi",
               },
             ].map((m) => (
@@ -101,8 +101,8 @@ export function Precision() {
             <div className="cred">
               <h3><span>&lt;5 µm</span> optical metrology</h3>
               <p>
-                A high-resolution camera measuring system captures up to 25 outside values —
-                including insert angle — and the inspection soft copy ships to you.
+                A high-resolution camera measuring system captures up to 25 outside values , 
+                including insert angle, and the inspection soft copy ships to you.
               </p>
               <span className="mono">vision measuring system · 25 values · &lt;5 micron</span>
             </div>
