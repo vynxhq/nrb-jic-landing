@@ -24,7 +24,7 @@ const CATALOG: CatalogEntry[] = [
     family: "JIC INSERT",
     part: "insert",
     label: "JIC Insert",
-    blurb: "External thread and machined 37° flare nose — the sealing element.",
+    blurb: "External thread and machined 37° flare nose, the sealing element.",
     camera: [0.9, 0.55, 1.5],
   },
   {
@@ -65,7 +65,7 @@ export function Catalog3D() {
           <div className="kicker">The family in 3D</div>
           <h2 className="title">Four components. 58 configurations. One connection.</h2>
           <p className="lead">
-            Every part below is rendered live from NRB's parametric product data — pick any
+            Every part below is rendered live from NRB's parametric product data, pick any
             configuration in the configurator and the model regenerates to match.
           </p>
         </Reveal>
