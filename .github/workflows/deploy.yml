@@ -29,6 +29,10 @@ jobs:
         run: |
           cp qa-standalone.html dist/qa.html
           npx esbuild src/qa-entry.ts --bundle --format=esm --outfile=dist/qa_bundle.js
+      - name: Add dimensions sandbox
+        run: |
+          cp dimensions.html dist/dimensions.html
+          npx esbuild src/dimensions-entry.ts --bundle --format=esm --outfile=dist/dimensions_bundle.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
