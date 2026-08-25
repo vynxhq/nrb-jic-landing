@@ -34,7 +34,7 @@ export function BuyerSafety() {
               <div className="big">Zero</div>
               <h3>Minimum order quantity</h3>
               <p>
-                We accept minimums as low as 100 pcs even on slow-moving large sizes — your
+                We accept minimums as low as 100 pcs even on slow-moving large sizes, your
                 long-tail SKUs stay covered.
               </p>
             </div>
@@ -93,10 +93,10 @@ export function ConfigTable() {
       <div className="container">
         <Reveal>
           <div className="kicker">Full range</div>
-          <h2 className="title">{jic.title} — all {rows.length > 0 ? "58" : ""} configurations.</h2>
+          <h2 className="title">{jic.title}, all {rows.length > 0 ? "58" : ""} configurations.</h2>
           <p className="lead">
             Straight from NRB's product database. Can't find a variant? NRB manufactures to
-            drawing — "we believe we can manufacture anything you can draw."
+            drawing, "we believe we can manufacture anything you can draw."
           </p>
         </Reveal>
 
