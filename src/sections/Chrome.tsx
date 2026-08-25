@@ -8,7 +8,7 @@ export function Rfq() {
           <div className="kicker">Start small. Grow with confidence.</div>
           <h2 className="title">Request a 5–20 piece trial lot.</h2>
           <p className="lead">
-            Tell us the configuration and quantity — we'll confirm price, lead time and dispatch
+            Tell us the configuration and quantity, we'll confirm price, lead time and dispatch
             date. Orders up to $35,000 are ready in 21 days, and you're updated every 10 days
             until shipment.
           </p>
@@ -27,7 +27,7 @@ export function Rfq() {
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
-              const subject = `RFQ from website: ${fd.get("company")} — ${fd.get("part")}`;
+              const subject = `RFQ from website: ${fd.get("company")}, ${fd.get("part")}`;
               const body = `Name: ${fd.get("name")}\nCompany: ${fd.get("company")}\nEmail: ${fd.get(
                 "email",
               )}\nPart / configuration: ${fd.get("part")}\nQuantity: ${fd.get("qty")}\n\nNotes:\n${fd.get("notes")}`;
@@ -41,10 +41,10 @@ export function Rfq() {
             <input name="email" type="email" required placeholder="Email" />
             <input name="part" placeholder="Part / configuration (e.g., NUT DASH-08, SS304)" />
             <input name="qty" placeholder="Quantity (even 20 pcs is fine)" />
-            <textarea name="notes" rows={4} placeholder="Notes — application, media, target date…" />
+            <textarea name="notes" rows={4} placeholder="Notes, application, media, target date…" />
             <button className="btn btn-primary" type="submit">Send enquiry</button>
             <p className="spec-note">
-              Your enquiry opens as an email to NRB directly — no data stored on this page.
+              Your enquiry opens as an email to NRB directly, no data stored on this page.
             </p>
           </form>
         </Reveal>
