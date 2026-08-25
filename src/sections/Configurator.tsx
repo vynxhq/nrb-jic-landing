@@ -32,6 +32,7 @@ export function Configurator() {
   const [dash, setDash] = useState(8);
   const [material, setMaterial] = useState<MaterialKey>("ss304");
   const [series, setSeries] = useState<"unf" | "bspp">("unf");
+  const [dimsOn, setDimsOn] = useState(true);
 
   // Deep-link: catalog cards & table rows dispatch "nrb-view-3d" to load a config.
   useEffect(() => {
@@ -75,9 +76,18 @@ export function Configurator() {
                   explode={0}
                   spin={false}
                   part={comp.part}
+                  showDims={dimsOn}
                   mouthDir={family === "JIC NUT" ? [0.9, 0.42, 0.05] : undefined}
                 />
               </StudioCanvas>
+            </div>
+            <div className="config-controls" style={{ marginTop: 10 }}>
+              <button
+                className={`chip ${dimsOn ? "active" : ""}`}
+                onClick={() => setDimsOn(!dimsOn)}
+              >
+                {dimsOn ? "Hide dimensions" : "Show dimensions"}
+              </button>
             </div>
 
             <div className="control-label">Component</div>
