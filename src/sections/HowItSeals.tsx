@@ -32,7 +32,7 @@ export function HowItSeals() {
           <h2 className="title">Four steps from bar stock to bubble-tight.</h2>
           <p className="lead">
             The 37° flare is why JIC works: metal-to-metal contact between the insert's flare and
-            the nut's counterseat seals without O-rings — and re-seals after every reassembly.
+            the nut's counterseat seals without O-rings, and re-seals after every reassembly.
           </p>
         </Reveal>
         <div className="steps">
@@ -41,7 +41,7 @@ export function HowItSeals() {
               <div className="step-no">01 / FLARE</div>
               <h3>Insert flares at 37°</h3>
               <p>
-                The insert's nose is machined to the SAE 37° flare angle — the sealing surface is
+                The insert's nose is machined to the SAE 37° flare angle, the sealing surface is
                 the metal itself, machined from bar stock on CNC lathes.
               </p>
             </div>
@@ -52,7 +52,7 @@ export function HowItSeals() {
               <h3>Nut counterseat engages</h3>
               <p>
                 Torquing the nut draws its 37° counterseat against the flare. No soft seals, no
-                cold flow — dependable under vibration and thermal cycles.
+                cold flow, dependable under vibration and thermal cycles.
               </p>
             </div>
           </Reveal>
@@ -61,7 +61,7 @@ export function HowItSeals() {
               <div className="step-no">03 / CRIMP</div>
               <h3>Ferrule locks the hose</h3>
               <p>
-                The collar is crimped by computerized Finn-Power crimping — by calibrated pressure
+                The collar is crimped by computerized Finn-Power crimping, by calibrated pressure
                 or by millimetres of movement, exactly to your specification.
               </p>
             </div>
