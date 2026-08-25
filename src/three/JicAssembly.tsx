@@ -159,7 +159,9 @@ export function JicAssembly({
 
   // Solo-part rendering (catalog cards / configurator single-component view)
   if (part !== "assembly") {
-    const dimsG = showDims ? dimensionsFor(part) : null;
+    // dimensions live INSIDE the same rotated frame as their part — a sibling
+    // group would not inherit the mesh rotation and end up misaligned
+    const dimsG = showDims ? dimensionsFor(part, part === "nut" ? "mouth" : undefined) : null;
     const solo =
       part === "nut" ? (
         <group quaternion={nutQuat}>
@@ -168,13 +170,23 @@ export function JicAssembly({
           <primitive object={nutTeeth} />
           {/* mouth light: illuminates the internal thread grooves and seat */}
           <pointLight position={[0, -nutH * 1.7, 0]} intensity={1.6} distance={2.2} decay={2} color="#fff2dd" />
+          {dimsG ? <primitive object={dimsG} /> : null}
         </group>
       ) : part === "insert" ? (
-        <mesh geometry={geos.insert} material={mat} rotation={rot} castShadow receiveShadow />
+        <group rotation={rot}>
+          <mesh geometry={geos.insert} material={mat} castShadow receiveShadow />
+          {dimsG ? <primitive object={dimsG} /> : null}
+        </group>
       ) : part === "ferrule" ? (
-        <mesh geometry={geos.ferrule} material={mat} rotation={rot} castShadow receiveShadow />
+        <group rotation={rot}>
+          <mesh geometry={geos.ferrule} material={mat} castShadow receiveShadow />
+          {dimsG ? <primitive object={dimsG} /> : null}
+        </group>
       ) : (
-        <mesh geometry={geos.tube} material={mat} rotation={rot} castShadow receiveShadow />
+        <group rotation={rot}>
+          <mesh geometry={geos.tube} material={mat} castShadow receiveShadow />
+          {dimsG ? <primitive object={dimsG} /> : null}
+        </group>
       );
     // nut: no extra outer rotation (quaternion already aims the mouth);
     // others: keep the three-quarter presentation angle
