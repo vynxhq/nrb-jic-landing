@@ -41,7 +41,7 @@ export function Hero() {
         </h1>
         <p className="sub">
           NRB Hydraulics manufactures JIC nuts, inserts, ferrules and steel tube ends to your
-          drawings — with the tolerances, cleanliness and on-time delivery that export buyers
+          drawings, with the tolerances, cleanliness and on-time delivery that export buyers
           audit for.
         </p>
         <div className="hero-badges">
