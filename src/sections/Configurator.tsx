@@ -62,7 +62,7 @@ export function Configurator() {
         <h2 className="title">See your exact fitting before you request it.</h2>
         <p className="lead">
           Every configuration below comes straight from NRB's product database. Pick a component,
-          size and material — the model and spec card update live.
+          size and material, the model and spec card update live.
         </p>
 
         <div className="config-grid">
@@ -137,19 +137,19 @@ export function Configurator() {
             <dl className="spec-rows">
               <div className="spec-row">
                 <dt>Part code</dt>
-                <dd className="mono">{config?.partNumber ?? "—"}</dd>
+                <dd className="mono">{config?.partNumber ?? ", "}</dd>
               </div>
               <div className="spec-row">
                 <dt>Tube size</dt>
-                <dd>{config?.size ?? "—"}</dd>
+                <dd>{config?.size ?? ", "}</dd>
               </div>
               <div className="spec-row">
                 <dt>Thread / type</dt>
-                <dd className="mono">{family === "FERRULE" ? config?.thread ?? "—" : thread}</dd>
+                <dd className="mono">{family === "FERRULE" ? config?.thread ?? ", " : thread}</dd>
               </div>
               <div className="spec-row">
                 <dt>Working pressure</dt>
-                <dd>{config?.pressure ?? "—"}</dd>
+                <dd>{config?.pressure ?? ", "}</dd>
               </div>
               <div className="spec-row">
                 <dt>Material</dt>
@@ -162,7 +162,7 @@ export function Configurator() {
             </dl>
             <p className="spec-note">
               {THREAD_DATA_NOTE} Data source: NRB Product Database v3 (2019 catalogue lineage).
-              NRB manufactures to drawing — other materials and threads on request.
+              NRB manufactures to drawing, other materials and threads on request.
             </p>
             <a
               className="btn btn-primary"
