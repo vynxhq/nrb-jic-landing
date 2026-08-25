@@ -18,28 +18,28 @@ const CATALOG: CatalogEntry[] = [
     part: "nut",
     label: "JIC Nut",
     blurb: "Hex body, threaded bore, 37° counterseat. The torque element of the connection.",
-    camera: [0.9, 0.55, 1.35],
+    camera: [1.06, 0.65, 1.59],
   },
   {
     family: "JIC INSERT",
     part: "insert",
     label: "JIC Insert",
     blurb: "External thread and machined 37° flare nose, the sealing element.",
-    camera: [0.9, 0.55, 1.5],
+    camera: [1.06, 0.65, 1.77],
   },
   {
     family: "FERRULE",
     part: "ferrule",
     label: "Ferrule (Collar)",
     blurb: "Crimped onto the hose or tube to lock the assembly under pressure.",
-    camera: [0.9, 0.55, 1.3],
+    camera: [1.06, 0.65, 1.53],
   },
   {
     family: "STEEL TUBE END",
     part: "tube",
     label: "Steel Tube End",
     blurb: "Seamless tube ends in SS316 / brass, dash –04 to –16.",
-    camera: [0.9, 0.55, 1.5],
+    camera: [1.06, 0.65, 1.77],
   },
 ];
 
@@ -86,6 +86,7 @@ export function Catalog3D() {
                       explode={0}
                       spin={false}
                       part={c.part}
+                      showDims
                       mouthDir={c.family === "JIC NUT" ? [0.42, 0.35, 0.83] : undefined}
                     />
                   </StudioCanvas>
