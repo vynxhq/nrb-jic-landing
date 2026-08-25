@@ -23,11 +23,12 @@ const dim = (a: number[], b: number[], offset: number[], text: string): DimSpec 
   label: text,
 });
 
-export function dimensionsFor(kind: string): THREE.Group {
+export function dimensionsFor(kind: string, end: "seat" | "mouth" = "seat"): THREE.Group {
   const d = dashDims(8); // prototype presented at dash-08
   const d2 = d.tubeOD; // shorthand: tube OD (in)
   const g = new THREE.Group();
   g.name = "engineeringDimensions";
+  const sgn = end === "mouth" ? -1 : 1; // nut mouth sits at -Y, seat at +Y
 
   if (kind === "assembly") {
     // overall stack length: tube end to nut face
@@ -45,7 +46,7 @@ export function dimensionsFor(kind: string): THREE.Group {
     const af = d.hexAF;
     // across flats: flat-to-flat runs perpendicular to the corner vertices
     g.add(makeDimension(
-      dim([-af / 2, h / 2, 0], [af / 2, h / 2, 0], [0, 0.16, 0],
+      dim([-af / 2, sgn * h / 2, 0], [af / 2, sgn * h / 2, 0], [0, sgn * 0.16, 0],
         `AF ${IN(af)} · ${MM(af)}`),
     ));
     // height: along the bore axis, offset radially clear of the hex
@@ -53,7 +54,7 @@ export function dimensionsFor(kind: string): THREE.Group {
       dim([0, -h / 2, 0], [0, h / 2, 0], [af / 2 + 0.18, 0, 0],
         `H ${IN(h)} · ${MM(h)}`),
     ));
-    g.add(makeNote(`3/4"-16 UNF · 37° counterseat`, new THREE.Vector3(0, h / 2 + 0.3, 0)));
+    g.add(makeNote(`3/4"-16 UNF · 37° counterseat`, new THREE.Vector3(0, sgn * (h / 2 + 0.3), 0)));
   }
 
   if (kind === "insert") {
