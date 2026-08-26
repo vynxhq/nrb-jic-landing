@@ -26925,8 +26925,82 @@ function tubeGeometry(dims, length) {
   return lathe(pts, 48);
 }
 
+// src/three/modelDimensions.ts
+var IN = (v) => `${v.toFixed(2)}"`;
+var MM = (v) => `${(v * 25.4).toFixed(1)} mm`;
+function dimensionSpecsFor(kind) {
+  const d = dashDims(8);
+  const r = d.tubeOD;
+  const specs = [];
+  if (kind === "assembly") {
+    const xL = -r * 3.48;
+    const xR = r * 1.355;
+    specs.push({
+      a: [xL, 0, 0],
+      b: [xR, 0, 0],
+      label: `L ${IN(xR - xL)} \xB7 ${MM(xR - xL)}`
+    });
+  }
+  if (kind === "nut") {
+    const h = r * 1.15;
+    const af = d.hexAF;
+    specs.push({
+      a: [-af / 2, -h / 2, 0],
+      b: [af / 2, -h / 2, 0],
+      label: `AF ${IN(af)} \xB7 ${MM(af)}`
+    });
+    specs.push({
+      a: [0, -h / 2, 0],
+      b: [0, h / 2, 0],
+      label: `H ${IN(h)} \xB7 ${MM(h)}`
+    });
+  }
+  if (kind === "insert") {
+    const L = r * 2.6;
+    const flareD = r * 1.72;
+    specs.push({
+      a: [0, -L / 2, 0],
+      b: [0, L / 2, 0],
+      label: `L ${IN(L)} \xB7 ${MM(L)}`
+    });
+    specs.push({
+      a: [0, -L / 2 + r * 0.1, -flareD / 2],
+      b: [0, -L / 2 + r * 0.1, flareD / 2],
+      label: `\xD8 ${IN(flareD)} \xB7 ${MM(flareD)}`
+    });
+  }
+  if (kind === "ferrule") {
+    const h = r * 0.55;
+    const od = r * 1.76;
+    specs.push({
+      a: [0, -h / 2, 0],
+      b: [0, h / 2, 0],
+      label: `L ${IN(h)} \xB7 ${MM(h)}`
+    });
+    specs.push({
+      a: [0, h / 2, -od / 2],
+      b: [0, h / 2, od / 2],
+      label: `OD ${IN(od)} \xB7 ${MM(od)}`
+    });
+  }
+  if (kind === "tube") {
+    const L = r * 2.2;
+    const od = r;
+    specs.push({
+      a: [0, -L / 2, 0],
+      b: [0, L / 2, 0],
+      label: `L ${IN(L)} \xB7 ${MM(L)}`
+    });
+    specs.push({
+      a: [0, 0, -od / 2],
+      b: [0, 0, od / 2],
+      label: `\xD8 ${IN(od)} \xB7 ${MM(od)}`
+    });
+  }
+  return specs;
+}
+
 // src/three/dimensions.ts
-var DIM_COLOR = 1077408;
 function makeLabelSprite(text, worldHeight = 0.14) {
   const measure = document.createElement("canvas").getContext("2d");
   const font = "600 46px ui-monospace, Consolas, monospace";
@@ -26962,154 +27036,12 @@ function makeLabelSprite(text, worldHeight = 0.14) {
   spr.renderOrder = 10;
   return spr;
 }
-function makeDimension(spec) {
-  const g = new Group();
-  const A = spec.a.clone().add(spec.offset);
-  const B = spec.b.clone().add(spec.offset);
-  const mat = new LineBasicMaterial({ color: DIM_COLOR, transparent: true, opacity: 0.95 });
-  const seg = (p, q) => new Line(new BufferGeometry().setFromPoints([p, q]), mat);
-  g.add(seg(spec.a, A));
-  g.add(seg(spec.b, B));
-  g.add(seg(A, B));
-  const dir = B.clone().sub(A).normalize();
-  const arrowGeo = new ConeGeometry(0.016, 0.05, 10);
-  const arrowMat = new MeshBasicMaterial({ color: DIM_COLOR });
-  const a1 = new Mesh(arrowGeo, arrowMat);
-  a1.position.copy(A).addScaledVector(dir, 0.025);
-  a1.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir.clone().negate());
-  const a2 = new Mesh(arrowGeo, arrowMat);
-  a2.position.copy(B).addScaledVector(dir, -0.025);
-  a2.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir);
-  g.add(a1, a2);
-  const label = makeLabelSprite(spec.label, 0.15);
-  label.position.copy(A).add(B).multiplyScalar(0.5);
-  g.add(label);
-  return g;
-}
-function makeNote(text, position) {
-  const spr = makeLabelSprite(text, 0.13);
-  spr.position.copy(position);
-  return spr;
-}
-
-// src/three/modelDimensions.ts
-var IN = (v) => `${v.toFixed(2)}"`;
-var MM = (v) => `${(v * 25.4).toFixed(1)} mm`;
-var dim = (a, b, offset, text) => ({
-  a: new Vector3(...a),
-  b: new Vector3(...b),
-  offset: new Vector3(...offset),
-  label: text
-});
-function dimensionsFor(kind, end = "seat") {
-  const d = dashDims(8);
-  const d2 = d.tubeOD;
-  const g = new Group();
-  g.name = "engineeringDimensions";
-  const sgn = end === "mouth" ? -1 : 1;
-  if (kind === "assembly") {
-    const xL = -d2 * 3.48;
-    const xR = d2 * 1.355;
-    g.add(makeDimension(
-      dim(
-        [xL, 0, 0],
-        [xR, 0, 0],
-        [0, -(d2 * 0.78), 0],
-        `L ${IN(xR - xL)} \xB7 ${MM(xR - xL)}`
-      )
-    ));
-    g.add(makeNote(`Female JIC connection \xB7 assembled`, new Vector3(xR - d2 * 0.4, d2 * 0.62, 0)));
-  }
-  if (kind === "nut") {
-    const h = d2 * 1.15;
-    const af = d.hexAF;
-    g.add(makeDimension(
-      dim(
-        [-af / 2, sgn * h / 2, 0],
-        [af / 2, sgn * h / 2, 0],
-        [0, sgn * 0.16, 0],
-        `AF ${IN(af)} \xB7 ${MM(af)}`
-      )
-    ));
-    g.add(makeDimension(
-      dim(
-        [0, -h / 2, 0],
-        [0, h / 2, 0],
-        [af / 2 + 0.18, 0, 0],
-        `H ${IN(h)} \xB7 ${MM(h)}`
-      )
-    ));
-    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 counterseat`, new Vector3(0, sgn * (h / 2 + 0.3), 0)));
-  }
-  if (kind === "insert") {
-    const L = d2 * 2.6;
-    const flareD = d2 * 0.86 * 2;
-    g.add(makeDimension(
-      dim(
-        [0, -L / 2, 0],
-        [0, L / 2, 0],
-        [0.34, 0, 0],
-        `L ${IN(L)} \xB7 ${MM(L)}`
-      )
-    ));
-    g.add(makeDimension(
-      dim(
-        [0, -L / 2 + d2 * 0.05, -flareD / 2],
-        [0, -L / 2 + d2 * 0.05, flareD / 2],
-        [0, 0.18, 0],
-        `\xD8 ${IN(flareD)} \xB7 ${MM(flareD)}`
-      )
-    ));
-    g.add(makeNote(`3/4"-16 UNF \xB7 37\xB0 flare`, new Vector3(0, L / 2 + 0.28, 0)));
-  }
-  if (kind === "ferrule") {
-    const h = d2 * 0.55;
-    const od = d2 * 0.88 * 2;
-    g.add(makeDimension(
-      dim(
-        [0, h / 2, -od / 2],
-        [0, h / 2, od / 2],
-        [0.2, 0, 0],
-        `OD ${IN(od)} \xB7 ${MM(od)}`
-      )
-    ));
-    g.add(makeDimension(
-      dim(
-        [0, -h / 2, 0],
-        [0, h / 2, 0],
-        [od / 2 + 0.14, 0, 0],
-        `L ${IN(h)} \xB7 ${MM(h)}`
-      )
-    ));
-    g.add(makeNote(`Crimp collar \xB7 smooth bore`, new Vector3(0, h / 2 + 0.26, 0)));
-  }
-  if (kind === "tube") {
-    const L = d2 * 2.2;
-    const od = d2;
-    g.add(makeDimension(
-      dim(
-        [0, 0, -od / 2],
-        [0, 0, od / 2],
-        [od / 2 + 0.22, 0, 0],
-        `\xD8 ${IN(od)} \xB7 ${MM(od)}`
-      )
-    ));
-    g.add(makeDimension(
-      dim(
-        [0, -L / 2, 0],
-        [0, L / 2, 0],
-        [0, -(L / 2 + 0.15), 0],
-        `L ${IN(L)} \xB7 ${MM(L)}`
-      )
-    ));
-    g.add(makeNote(`Seamless \xB7 Sch80 equivalent wall`, new Vector3(0, L / 2 + 0.24, 0)));
-  }
-  return g;
-}
 
 // src/dimensions-entry.ts
 var steel = new MeshStandardMaterial({ color: 13028303, metalness: 0.9, roughness: 0.33, side: DoubleSide });
 var steelFlat = new MeshStandardMaterial({ color: 13028303, metalness: 0.9, roughness: 0.33, side: DoubleSide, flatShading: true });
+var dimLineMat = new LineBasicMaterial({ color: 10475775, transparent: true, opacity: 0.95 });
+var dimArrowMat = new MeshBasicMaterial({ color: 10475775 });
 var KINDS = [
   { key: "nut", title: "JIC Nut, DASH-08", blurb: "Across-flats, height, thread series (SAE J514, pending confirmation)." },
   { key: "insert", title: "JIC Insert, DASH-08", blurb: "Overall length, flare diameter, external thread series." },
@@ -27117,7 +27049,60 @@ var KINDS = [
   { key: "tube", title: "Steel Tube End, DASH-08", blurb: 'Outside diameter (\xBD" tube) and length.' }
 ];
 var dimsVisible = true;
-var dimsGroups = [];
+var dimOverlays = [];
+function createWorldDimensions(specs, model, camera, scene) {
+  const objs = specs.map((s) => {
+    const mk = () => new Line(new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]), dimLineMat);
+    const extA = mk(), extB = mk(), dim = mk();
+    const arrowGeo = new ConeGeometry(0.016, 0.05, 10);
+    const arrowA = new Mesh(arrowGeo, dimArrowMat);
+    const arrowB = new Mesh(arrowGeo, dimArrowMat);
+    const label = makeLabelSprite(s.label, 0.13);
+    const g = new Group();
+    g.add(extA, extB, dim, arrowA, arrowB, label);
+    scene.add(g);
+    return { g, extA, extB, dim, arrowA, arrowB, label, s };
+  });
+  const va = new Vector3(), vb = new Vector3();
+  const wa = new Vector3(), wb = new Vector3();
+  const off = new Vector3(), right = new Vector3(), spanDir = new Vector3();
+  return {
+    update() {
+      model.updateWorldMatrix(true, false);
+      const m = model.matrixWorld;
+      for (const o of objs) {
+        va.set(o.s.a[0], o.s.a[1], o.s.a[2]).applyMatrix4(m);
+        vb.set(o.s.b[0], o.s.b[1], o.s.b[2]).applyMatrix4(m);
+        spanDir.copy(vb).sub(va);
+        const spanLen = spanDir.length();
+        spanDir.normalize();
+        right.setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+        off.copy(right).addScaledVector(spanDir, -right.dot(spanDir));
+        if (off.lengthSq() < 1e-6) off.set(0, 1, 0);
+        off.normalize().multiplyScalar(spanLen * 0.24 + 0.1);
+        wa.copy(va).add(off);
+        wb.copy(vb).add(off);
+        const setLine = (line, p, q) => {
+          const attr = line.geometry.getAttribute("position");
+          attr.setXYZ(0, p.x, p.y, p.z);
+          attr.setXYZ(1, q.x, q.y, q.z);
+          attr.needsUpdate = true;
+        };
+        setLine(o.extA, va, wa);
+        setLine(o.extB, vb, wb);
+        setLine(o.dim, wa, wb);
+        o.arrowA.position.copy(wa).addScaledVector(spanDir, -0.02);
+        o.arrowA.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), spanDir.clone().negate());
+        o.arrowB.position.copy(wb).addScaledVector(spanDir, 0.02);
+        o.arrowB.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), spanDir);
+        o.label.position.copy(wa).add(wb).multiplyScalar(0.5).addScaledVector(off, 0.35);
+      }
+    },
+    setVisible(v) {
+      for (const o of objs) o.g.visible = v;
+    }
+  };
+}
 function buildCard(kind, title, blurb) {
   const card = document.createElement("div");
   card.className = "card";
@@ -27186,10 +27171,10 @@ function buildCard(kind, title, blurb) {
   } else {
     model.add(new Mesh(tubeGeometry(dims, dims.tubeOD * 2.2), steelM));
   }
-  const dimsGroup = dimensionsFor(kind);
-  model.add(dimsGroup);
-  dimsGroups.push(dimsGroup);
   scene.add(model);
+  const specs = dimensionSpecsFor(kind);
+  const overlay = createWorldDimensions(specs, model, camera, scene);
+  dimOverlays.push(overlay);
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.enablePan = false;
@@ -27207,6 +27192,7 @@ function buildCard(kind, title, blurb) {
   });
   function tick() {
     controls.update();
+    overlay.update();
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
@@ -27217,7 +27203,7 @@ var btn = document.getElementById("toggle");
 btn.addEventListener("click", () => {
   dimsVisible = !dimsVisible;
   btn.textContent = dimsVisible ? "Hide dimensions" : "Show dimensions";
-  for (const g of dimsGroups) g.visible = dimsVisible;
+  for (const o of dimOverlays) o.setVisible(dimsVisible);
 });
 /*! Bundled license information:
 
